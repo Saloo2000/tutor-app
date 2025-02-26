@@ -32,9 +32,10 @@ const ScienceTutor = () => {
         `,
       };
 
-  console.log(messages);
       
-      const chatHistory = messages.filter((message) => message.role === "user");
+      const chatHistory = messages.map((message) => message)
+      
+      console.log(chatHistory);
       const chatMessages = [
          { role: "user", content: userInput }, // Always include the user's message
         ...(imageURL
@@ -85,7 +86,7 @@ const ScienceTutor = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer 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",
+          Authorization: "Bearer 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",
         },
         body: JSON.stringify({
           model: "google/gemini-2.0-flash-lite-preview-02-05:free",
@@ -185,22 +186,32 @@ setFileLoading(true)
   }, [messages]); 
 
 
-  const handleFileUploadBase = (e) => {
+  const handleFileUploadBase = (event) => {
     handleKnowledg();
+    console.log(event.target.files[0]);
+    
+    const file = event.target.files[0]; // Get the first file from the input
+    if (!file) {
+        console.error("No file selected.");
+        return;
+    }
+    
     const reader = new FileReader();
     reader.onloadend = () => {
-      const imageData = reader.result;
-      setKnowledgeBase([...knowledgeBase, `${inputRef.current.value}: ${imageData}`]);
-      console.log("Image uploaded:",)
+        const imageData = reader.result;
+        setKnowledgeBase([...knowledgeBase, `${inputRef.current.value}: ${imageData}`]);
+        console.log("Image uploaded:", imageData);
     };
-    reader.readAsDataURL(file);
-    e.target.value = null;
-  }
+
+    reader.readAsDataURL(file); // Read the file as a Data URL
+    event.target.value = null; // Reset the file input
+};
+
 
   const handleKnowledg = () => {
     const data = inputRef.current.value;
     setKnowledgeBase([...knowledgeBase, data]);
-    console.log(knowledgeBase);
+    // console.log(knowledgeBase);
     inputRef.current.value = '';
   }
 
@@ -252,18 +263,18 @@ setFileLoading(true)
 
       <div className="mt-4 flex gap-3 bg-gray-800 p-3 rounded-lg">
 
-<div className="flex flex-col items-center gap-2">
+<div className="flex items-center gap-2">
 
 <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
 <input
           type="file"
-          accept="image/*,application/pdf"
           onChange={handleFileUpload}
+          accept="image/*,application/pdf"
           className="hidden"
           id="file-upload"
         />
         <label
-          htmlFor="file-upload"
+          htmlFor="file"
           className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-white"
         > 
         {fileLoading ? <LoadingSpinner/> : <Upload className="w-5 h-5" />}
@@ -271,6 +282,15 @@ setFileLoading(true)
         </label>
 </div>
         
+{/* <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
+<input type="file"
+          accept="image/*,application/pdf"
+          // className="hidden"
+onChange={handleFileUploadBase}
+/>
+
+</div> */}
+
 </div>
 
 
@@ -309,7 +329,7 @@ className="flex items-center gap-2 pb-2">
           className="flex-1 p-3 h-[50px] bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
-          onClick={handleFileUploadBase}
+          onClick={handleKnowledg}
           disabled={loading}
           className={`flex items-center gap-2 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors ${
             loading ? "opacity-50 cursor-not-allowed" : ""
