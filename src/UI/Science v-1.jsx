@@ -18,6 +18,7 @@ const ScienceTutor = () => {
   const [knowledgeBase, setKnowledgeBase] = useState([]); // Store knowledge base content
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const baseRef = useRef(null);
   
   const fetchChatCompletion = async () => {
     setLoading(true);
@@ -86,7 +87,7 @@ const ScienceTutor = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer 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",
+          Authorization: "Bearer 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",
         },
         body: JSON.stringify({
           model: "google/gemini-2.0-flash-lite-preview-02-05:free",
@@ -186,20 +187,20 @@ setFileLoading(true)
   }, [messages]); 
 
 
-  const handleFileUploadBase = (event) => {
+  const handleFileUploadBase = () => {
     handleKnowledg();
-    console.log(event.target.files[0]);
+    console.log(baseRef.target.files[0]);
     
-    const file = event.target.files[0]; // Get the first file from the input
+    const file = baseRef.target.files[0]; // Get the first file from the input
     if (!file) {
-        console.error("No file selected.");
-        return;
+      console.error("No file selected.");
+      return;
     }
     
     const reader = new FileReader();
     reader.onloadend = () => {
         const imageData = reader.result;
-        setKnowledgeBase([...knowledgeBase, `${inputRef.current.value}: ${imageData}`]);
+        setKnowledgeBase([...knowledgeBase, `${knowledgeBase[0]}: ${imageData}`]);
         console.log("Image uploaded:", imageData);
     };
 
@@ -285,6 +286,7 @@ setFileLoading(true)
 {/* <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
 <input type="file"
           accept="image/*,application/pdf"
+          ref={baseRef}
           // className="hidden"
 onChange={handleFileUploadBase}
 />
