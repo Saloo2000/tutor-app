@@ -267,24 +267,22 @@ setFileLoading(true)
 
 <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
 <input
-          type="file"
-          accept="image/*,application/pdf"
-          onChange={handleFileUpload}
-          className="hidden"
-          id="file-upload"
-        />
-        <label
-          htmlFor="file"
-          className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-white"
-        > 
-        {fileLoading ? <LoadingSpinner/> : <Upload className="w-5 h-5" />}
-          <span>{fileLoading ? "Uploading File" : imageURL ? "Uploaded"  : "Upload File"}</span>
-        </label>
+  type="file"
+  accept="image/*,application/pdf"
+  onChange={handleFileUpload}
+  className="hidden"
+  id="file-upload" // ID matches
+/>
+<label
+  htmlFor="file-upload" // Reference updated
+  className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-white"
+>
+  {fileLoading ? <LoadingSpinner /> : <Upload className="w-5 h-5" />}
+  <span>{fileLoading ? "Uploading File" : imageURL ? "Uploaded" : "Upload File"}</span>
+</label>
+
 </div>
         
-{/* <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
-<input type="file" />
-</div> */}
 
 </div>
 
