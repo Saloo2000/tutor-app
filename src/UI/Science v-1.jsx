@@ -18,7 +18,6 @@ const ScienceTutor = () => {
   const [knowledgeBase, setKnowledgeBase] = useState([]); // Store knowledge base content
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
-  const baseRef = useRef(null);
   
   const fetchChatCompletion = async () => {
     setLoading(true);
@@ -87,7 +86,7 @@ const ScienceTutor = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer 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",
+          Authorization: "Bearer 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",
         },
         body: JSON.stringify({
           model: "google/gemini-2.0-flash-lite-preview-02-05:free",
@@ -187,20 +186,20 @@ setFileLoading(true)
   }, [messages]); 
 
 
-  const handleFileUploadBase = () => {
+  const handleFileUploadBase = (event) => {
     handleKnowledg();
-    console.log(baseRef.target.files[0]);
+    console.log(event.target.files[0]);
     
-    const file = baseRef.target.files[0]; // Get the first file from the input
+    const file = event.target.files[0]; // Get the first file from the input
     if (!file) {
-      console.error("No file selected.");
-      return;
+        console.error("No file selected.");
+        return;
     }
     
     const reader = new FileReader();
     reader.onloadend = () => {
         const imageData = reader.result;
-        setKnowledgeBase([...knowledgeBase, `${knowledgeBase[0]}: ${imageData}`]);
+        setKnowledgeBase([...knowledgeBase, `${inputRef.current.value}: ${imageData}`]);
         console.log("Image uploaded:", imageData);
     };
 
@@ -269,8 +268,8 @@ setFileLoading(true)
 <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
 <input
           type="file"
-          onChange={handleFileUpload}
           accept="image/*,application/pdf"
+          onChange={handleFileUpload}
           className="hidden"
           id="file-upload"
         />
@@ -284,13 +283,7 @@ setFileLoading(true)
 </div>
         
 {/* <div className="rounded-lg flex h-[120px] bg-gray-700 p-3">
-<input type="file"
-          accept="image/*,application/pdf"
-          ref={baseRef}
-          // className="hidden"
-onChange={handleFileUploadBase}
-/>
-
+<input type="file" />
 </div> */}
 
 </div>
